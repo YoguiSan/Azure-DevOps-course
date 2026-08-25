@@ -7,9 +7,6 @@ resources:
 variables:
   dockerFilePath: string
   tags: string
-  # Example:
-  # dockerFilePath: '**/Dockerfile'
-  # tags: '$(Build.BuildId)'
 
 stages:
 - stage: string
@@ -19,14 +16,6 @@ stages:
   pool: string | pool
   variables: { string: string } | [variable | variableReference]
   jobs: [job | templateReference]
-# Example:
-# - stage: A
-# Stage B runs if stage A fails
-# - stage: B
-#   condition: failed()
-# Stage C runs if B succeeded
-# - stage: C
-#   condition: succeeded('B')
 
 # Agent jobs
 jobs:
@@ -39,18 +28,52 @@ jobs:
         containerResource: string
   container: string
   steps:
-  - script: string
+  - script: string | templateReference
 
-# Example:
-# job: RunInContainer
-# pool:
-#   vmImage: 'ubuntu-16.04'
-# strategy:
-#   matrix:
-#     ubuntu14:
-#       containerResource: u14
-#     ubuntu16:
-#       containerResource: u16
-# container: $[ variables['containerResource'] ]
-# steps:
-# - script: printenv
+parameters:
+- name: string
+  displayName: string
+  type: string
+  default: boolean
+
+
+# ================================================ Example
+
+
+trigger
+- master
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+jobs:
+- job: RunInContainer
+  strategy:
+    matrix:
+      ubuntu14:
+        containerResource: u14
+      ubuntu16:
+        containerResource: u16
+  container: $[ variables['containerResource'] ]
+  steps:
+  - script: |
+      echo Add other tasks to build, test and deploy
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi line script'
+
+  - script: printenv
+  - ${{ if (eq(parameters.experimentalTemplate, true)) }}:
+    - template: experimental.yml
+
+variables:
+  dockerFilePath: '**/Dockerfile'
+  tags: '${Build.BuildId}'
+
+stages:
+- stage: A
+# Stage B runs if stage A fails
+- stage: B
+  condition: failed()
+# Stage C runs if B succeeded
+- stage: C
+  condition: succeeded('B')
