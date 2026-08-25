@@ -43,6 +43,10 @@ parameters:
 trigger
 - master
 
+# Using template
+extends:
+  template: template.yml
+
 pool:
   vmImage: 'ubuntu-16.04'
 
@@ -67,7 +71,7 @@ jobs:
 
 variables:
   dockerFilePath: '**/Dockerfile'
-  tags: '${Build.BuildId}'
+  tags: '$(Build.BuildId)'
 
 stages:
 - stage: A
@@ -86,3 +90,20 @@ schedules:
       include:
         - master
     always: true
+
+steps: 
+- script: echo "Usando tasks"
+  displayName: "Rodar script"
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+    # Write commands here
+
+    Write-Host "Usando tasks no YAML"
+    Write-Host $(variableName)
+  - task: PublishBuildArtifact@1
+    inputs:
+      PathToPublish: '.'
+      ArtifactName: 'drop-yaml'
+      publishLocation: 'Container'

@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "Azure Pipelines Example YAML"
+        "Azure Pipelines Example YAML",
+        "Template YAML's"
     ]
 }
