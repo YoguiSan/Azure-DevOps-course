@@ -77,3 +77,12 @@ stages:
 # Stage C runs if B succeeded
 - stage: C
   condition: succeeded('B')
+
+schedules:
+  - cron:
+    "35 10 * * *"
+    displayName: Agendamento pelo YAML
+    branches:
+      include:
+        - master
+    always: true
