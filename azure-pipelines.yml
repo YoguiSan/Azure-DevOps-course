@@ -1,0 +1,14 @@
+trigger:
+- master
+
+resources:
+-repo: self
+
+variables:
+  dockerFilePath: '**/Dockerfile'
+  tags: '$(Build.BuildId)'
+
+stages:
+- stage: build
+  displayName: Build stage
+  dependsOn: string | [ string ]

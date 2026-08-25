@@ -1,0 +1,56 @@
+trigger:
+- string
+
+resources:
+-repo: string
+
+variables:
+  dockerFilePath: string
+  tags: string
+  # Example:
+  # dockerFilePath: '**/Dockerfile'
+  # tags: '$(Build.BuildId)'
+
+stages:
+- stage: string
+  displayName: string
+  dependsOn: string | string[]
+  condition: string
+  pool: string | pool
+  variables: { string: string } | [variable | variableReference]
+  jobs: [job | templateReference]
+# Example:
+# - stage: A
+# Stage B runs if stage A fails
+# - stage: B
+#   condition: failed()
+# Stage C runs if B succeeded
+# - stage: C
+#   condition: succeeded('B')
+
+# Agent jobs
+jobs:
+- job: string
+  pool:
+    vmImage: string
+  strategy:
+    matrix:
+      (operating system name):
+        containerResource: string
+  container: string
+  steps:
+  - script: string
+
+# Example:
+# job: RunInContainer
+# pool:
+#   vmImage: 'ubuntu-16.04'
+# strategy:
+#   matrix:
+#     ubuntu14:
+#       containerResource: u14
+#     ubuntu16:
+#       containerResource: u16
+# container: $[ variables['containerResource'] ]
+# steps:
+# - script: printenv
